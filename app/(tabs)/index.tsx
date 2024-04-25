@@ -1,31 +1,57 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+import EditScreenInfo from "@/components/EditScreenInfo";
+import { Text, View } from "@/components/Themed";
+import React from "react";
 
-export default function TabOneScreen() {
+const Header = (): React.ReactElement => {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
+    <View style={styles.headerContainer}>
+      <View style={styles.imageContainer}>
+        <Text>fw</Text>
+      </View>
     </View>
   );
-}
+};
+
+const TabOneScreen = () => {
+  return (
+    <View style={styles.container}>
+      <View style={styles.leftHeader}></View>
+      <View></View>
+      <Text>hello world (index)</Text>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
+    padding: 20,
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   separator: {
     marginVertical: 30,
     height: 1,
-    width: '80%',
+    width: "80%",
+  },
+  headerContainer: {},
+
+  leftHeader: {},
+
+  imageContainer: {
+    backgroundColor: "red",
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+    borderColor: "white",
+    borderWidth: 1,
   },
 });
+
+export default TabOneScreen;
