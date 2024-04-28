@@ -1,18 +1,19 @@
 import React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link, Tabs } from "expo-router";
-import { Pressable } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/components/useColorScheme";
 import { useClientOnlyValue } from "@/components/useClientOnlyValue";
+import HomeScreen from "./HomeScreen";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
   color: string;
 }) {
-  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
+  return <FontAwesome size={24} style={{ marginBottom: -3 }} {...props} />;
 }
 
 export default function TabLayout() {
@@ -26,22 +27,33 @@ export default function TabLayout() {
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
         tabBarStyle: {
-          backgroundColor: "#2F2F2F",
+          marginBottom: -7,
+          paddingTop: -2,
+          backgroundColor: "white",
           position: "absolute",
-          bottom: 20,
-          marginHorizontal: 5,
-          borderRadius: 20,
           alignItems: "center",
           justifyContent: "center",
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+
+          fontWeight: "500",
+          color: Colors.light.text,
         },
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="HomeScreen"
+        // component={HomeScreen}
         options={{
-          title: "Tab One",
+          title: "Home",
+          headerStyle: {
+            backgroundColor: "red",
+          },
           headerShown: false,
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          tabBarIcon: () => (
+            <TabBarIcon name="home" color={Colors.light.text} />
+          ),
           headerRight: () => (
             <Link href="/modal" asChild>
               <Pressable>
@@ -58,18 +70,25 @@ export default function TabLayout() {
           ),
         }}
       />
+
       <Tabs.Screen
-        name="two"
+        name="ProgressScreen"
         options={{
-          title: "Tab Two",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: "Progress",
+
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="bar-chart" color={Colors.light.text} />
+          ),
         }}
       />
+
       <Tabs.Screen
-        name="articles"
+        name="SettingsScreen"
         options={{
-          title: "articles",
-          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+          title: "Settings",
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="gear" color={Colors.light.text} />
+          ),
         }}
       />
     </Tabs>

@@ -2,23 +2,24 @@ import { StyleSheet } from "react-native";
 
 import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
+import React from "react";
 
-export default function TabTwoScreen() {
+const Header = (): React.ReactElement => {
+  return <Text>fw</Text>;
+};
+
+const HomeScreen = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab Two2</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
-      <EditScreenInfo path="app/(tabs)/two.tsx" />
+      <View></View>
+      <Text>hello world (index)</Text>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
+    padding: 20,
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
@@ -33,3 +34,5 @@ const styles = StyleSheet.create({
     width: "80%",
   },
 });
+
+export default HomeScreen;
