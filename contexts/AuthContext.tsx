@@ -1,4 +1,4 @@
-import { useSegments, useRouter } from "expo-router";
+import { useSegments, useRouter, router } from "expo-router";
 import { createContext, useContext, useEffect, useState } from "react";
 
 type User = {
@@ -19,22 +19,21 @@ export const useAuth = () => useContext(AuthContext);
 
 function useProtectedRoute(user: any) {
   const segments = useSegments();
-  const router = useRouter();
 
   useEffect(() => {
     const inAuthGroup = segments[0] === "(auth)";
 
-    // if (
-    //   // If the user is not signed in and the initial segment is not anything in the auth group.
-    //   !user &&
-    //   !inAuthGroup
-    // ) {
-    //   // Redirect to the sign-in page.
-    //   router.replace("/SignIn");
-    // } else if (user && inAuthGroup) {
-    //   // Redirect away from the sign-in page.
-    //   router.replace("/(tabs)/HomeScreen");
-    // }
+    if (
+      // If the user is not signed in and the initial segment is not anything in the auth group.
+      !user &&
+      !inAuthGroup
+    ) {
+      // Redirect to the sign-in page.
+      router.replace("/(auth)/Login");
+    } else if (user && inAuthGroup) {
+      // Redirect away from the sign-in page.
+      router.replace("/(tabs)/ProgressScreen");
+    }
   }, [user, segments]);
 }
 

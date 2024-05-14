@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link, Tabs } from "expo-router";
 import { Pressable, Text, View } from "react-native";
@@ -22,7 +22,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+        tabBarActiveTintColor: Colors.light.purple,
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
@@ -61,7 +61,7 @@ export default function TabLayout() {
                   <FontAwesome
                     name="info-circle"
                     size={25}
-                    color={Colors[colorScheme ?? "light"].text}
+                    color={Colors.light.dark}
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                   />
                 )}
@@ -76,7 +76,7 @@ export default function TabLayout() {
         options={{
           title: "Progress",
 
-          tabBarIcon: ({ color }) => (
+          tabBarIcon: () => (
             <TabBarIcon name="bar-chart" color={Colors.light.text} />
           ),
         }}
@@ -86,7 +86,7 @@ export default function TabLayout() {
         name="SettingsScreen"
         options={{
           title: "Settings",
-          tabBarIcon: ({ color }) => (
+          tabBarIcon: () => (
             <TabBarIcon name="gear" color={Colors.light.text} />
           ),
         }}
