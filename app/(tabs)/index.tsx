@@ -4,7 +4,7 @@ import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
 import React, { useState } from "react";
 import Colors from "@/constants/Colors";
-import Button from "@/app/components/Button";
+import Button from "@/app/components/Buttons/Button";
 
 const Header = (): React.ReactElement => {
   return <Text>fw</Text>;
