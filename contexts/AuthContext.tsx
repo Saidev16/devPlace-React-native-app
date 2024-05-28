@@ -32,7 +32,7 @@ function useProtectedRoute(user: any) {
       router.replace("/(auth)/Login");
     } else if (user && inAuthGroup) {
       // Redirect away from the sign-in page.
-      router.replace("/(tabs)/ProgressScreen");
+      router.replace("/(tabs)");
     }
   }, [user, segments]);
 }

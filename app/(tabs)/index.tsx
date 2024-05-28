@@ -1,10 +1,10 @@
 import { StyleSheet } from "react-native";
 
-import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View } from "@/components/Themed";
 import React, { useState } from "react";
 import Colors from "@/constants/Colors";
-import Button from "@/app/components/Buttons/Button";
+
+import Buttons from "@/app/components/Buttons";
 
 const Header = (): React.ReactElement => {
   return <Text>fw</Text>;
@@ -15,18 +15,20 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
+      <Buttons.Primary>
+        <Text style={{ color: Colors.light.white, fontWeight: "500" }}>
+          Hello button
+        </Text>
+      </Buttons.Primary>
+
+      <Buttons.Secondary>
+        <Text style={{ color: Colors.light.purple, fontWeight: "500" }}>
+          Hello button
+        </Text>
+      </Buttons.Secondary>
+
       <View></View>
-      <Text>hello world (index)</Text>
-      <Button
-        onPress={() => setCount((prevCount) => prevCount + 1)}
-        width={200}
-        height={35}
-        justifyContent="center"
-        align="center"
-        color={"red"}
-      >
-        <Text>add </Text>
-      </Button>
+      <Text>hello world (index) </Text>
 
       {count > 0 && <Text>{count}</Text>}
     </View>
