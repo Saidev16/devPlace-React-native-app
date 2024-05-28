@@ -1,13 +1,14 @@
 import { StyleSheet } from "react-native";
 
-import { Text, View } from "@/components/Themed";
+import { View } from "@/components/Themed";
 import React, { useState } from "react";
 import Colors from "@/constants/Colors";
 
 import Buttons from "@/app/components/Buttons";
+import Text from "@components/Text";
 
 const Header = (): React.ReactElement => {
-  return <Text>fw</Text>;
+  return <Text size={10}>fw</Text>;
 };
 
 const HomeScreen = () => {
@@ -15,6 +16,8 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
+      <Header />
+
       <Buttons.Primary>
         <Text style={{ color: Colors.light.white, fontWeight: "500" }}>
           Hello button
@@ -38,10 +41,11 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.light.background,
-    padding: 20,
+    padding: 100,
+    gap: 50,
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+    // justifyContent: "center",
   },
   title: {
     fontSize: 20,

@@ -1,6 +1,4 @@
 import {
-  View,
-  Text,
   StyleSheet,
   ViewStyle,
   Vibration,
