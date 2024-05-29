@@ -65,12 +65,12 @@ const Text = ({
   ...props
 }: IText) => {
   const textStyle = StyleSheet.flatten([
-    h1 && { fontSize: 38, fontWeight: "800", fontFamily: "System" },
-    h2 && { fontSize: 32, fontWeight: "800", fontFamily: "System" },
-    h3 && { fontSize: 28, fontWeight: "800", fontFamily: "System" },
-    h4 && { fontSize: 24, fontWeight: "600", fontFamily: "System" },
-    h5 && { fontSize: 18, fontWeight: "600", fontFamily: "System" },
-    p && { fontSize: 14, fontWeight: "normal", fontFamily: "System" },
+    h1 && { fontSize: 38, fontWeight: "800", fontFamily: "Montserrat" },
+    h2 && { fontSize: 32, fontWeight: "800", fontFamily: "Montserrat" },
+    h3 && { fontSize: 28, fontWeight: "800", fontFamily: "Montserrat" },
+    h4 && { fontSize: 24, fontWeight: "600", fontFamily: "Montserrat" },
+    h5 && { fontSize: 18, fontWeight: "600", fontFamily: "Montserrat" },
+    p && { fontSize: 14, fontWeight: "normal", fontFamily: "Montserrat" },
     center && { textAlign: "center" },
     (align || textAlign) && { textAlign: textAlign || align },
     bold && { fontWeight: "800" },
@@ -79,7 +79,7 @@ const Text = ({
     (transform || textTransform) && {
       textTransform: textTransform || transform,
     },
-    (font || fontFamily) && { fontFamily: fontFamily || font },
+    font || fontFamily ? { fontFamily: fontFamily || font } : "Montserrat",
     (size || fontSize) && { fontSize: fontSize || size },
     color && { color },
     opacity && { opacity },

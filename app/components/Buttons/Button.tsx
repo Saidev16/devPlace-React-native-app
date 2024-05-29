@@ -52,6 +52,8 @@ const Button = ({
     },
     { minHeight: height || 48 },
     { minWidth: width || 48 },
+
+    { width: width || 200 },
     position && { position },
     top && { top },
     right && { right },
