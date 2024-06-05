@@ -12,24 +12,31 @@ import { ScrollView } from "react-native";
 
 const days = [
   {
+    id: 1,
     date: "29-05-2022",
   },
   {
+    id: 2,
     date: "30-05-2022",
   },
   {
+    id: 3,
     date: "01-06-2022",
   },
   {
+    id: 4,
     date: "02-06-2022",
   },
   {
+    id: 5,
     date: "03-06-2022",
   },
   {
+    id: 6,
     date: "04-06-2022",
   },
   {
+    id: 7,
     date: "05-06-2022",
   },
 ];
@@ -59,11 +66,29 @@ const Header = ({
   );
 };
 
-const Day = ({ date }: { date: string }) => {
+const Day = ({
+  date,
+  active,
+  onPress,
+}: {
+  date: string;
+  active: boolean;
+  onPress: (id: number) => void;
+}) => {
   const day = new Date(date).toLocaleString("en-us", { weekday: "long" });
 
   return (
-    <TouchableOpacity style={styles.dayBox}>
+    <TouchableOpacity
+      style={[
+        styles.dayBox,
+        {
+          backgroundColor: active
+            ? Colors.light.lightPurple
+            : Colors.light.lightGrey,
+          borderWidth: active ? 1.5 : 0,
+        },
+      ]}
+    >
       <Text size={14} fontWeight="500">
         {day.substring(0, 3)}
       </Text>
@@ -76,9 +101,15 @@ const Day = ({ date }: { date: string }) => {
 
 const HomeScreen = () => {
   const [count, setCount] = useState(0);
+  const [selectedDay, setSelectedDay] = useState("1");
 
   const handleAddPress = () => {
     Alert.alert("add pressed");
+  };
+
+  const onDayChange = (id: number) => {
+    setSelectedDay(id.toString());
+    //TODO : fetch data for the selected day and update the tasks board with the new data
   };
 
   return (
@@ -90,8 +121,13 @@ const HomeScreen = () => {
         showsHorizontalScrollIndicator={false}
         style={styles.daysContainer}
       >
-        {days.map((day, index) => (
-          <Day key={index} {...day} />
+        {days.map((day) => (
+          <Day
+            key={day.id}
+            active={day.id.toString() == selectedDay}
+            onPress={onDayChange}
+            {...day}
+          />
         ))}
       </ScrollView>
 
@@ -131,7 +167,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   dayBox: {
-    backgroundColor: Colors.light.lightGrey,
     height: 60,
     width: 60,
     gap: 5,
@@ -140,6 +175,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 0,
+    borderColor: Colors.light.purple,
   },
   day: {},
 

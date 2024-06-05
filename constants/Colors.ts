@@ -5,8 +5,9 @@ export default {
   light: {
     white: "#fff",
     purple: "#5F6CE2",
+    lightPurple: "#dbdfff",
     dark: "#1F1F1F",
-    gray: "#888A9D",
+    gray: "#e1e3f0",
     text: "#1c1c1c",
     background: "#f7f7f7",
     lightGrey: "#ededed",
