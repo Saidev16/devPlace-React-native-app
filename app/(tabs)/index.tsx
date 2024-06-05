@@ -1,4 +1,4 @@
-import { Alert, StyleSheet } from "react-native";
+import { Alert, StyleSheet, TouchableOpacity } from "react-native";
 
 import { View } from "@/components/Themed";
 import React, { useState } from "react";
@@ -8,6 +8,31 @@ import Buttons from "@/app/components/Buttons";
 import Text from "@components/Text";
 import { Dimensions } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { ScrollView } from "react-native";
+
+const days = [
+  {
+    date: "29-05-2022",
+  },
+  {
+    date: "30-05-2022",
+  },
+  {
+    date: "01-06-2022",
+  },
+  {
+    date: "02-06-2022",
+  },
+  {
+    date: "03-06-2022",
+  },
+  {
+    date: "04-06-2022",
+  },
+  {
+    date: "05-06-2022",
+  },
+];
 
 const Header = ({
   handleAddPress,
@@ -34,6 +59,21 @@ const Header = ({
   );
 };
 
+const Day = ({ date }: { date: string }) => {
+  const day = new Date(date).toLocaleString("en-us", { weekday: "long" });
+
+  return (
+    <TouchableOpacity style={styles.dayBox}>
+      <Text size={14} fontWeight="500">
+        {day.substring(0, 3)}
+      </Text>
+      <Text size={15} fontWeight="500">
+        {date.slice(0, 2)}
+      </Text>
+    </TouchableOpacity>
+  );
+};
+
 const HomeScreen = () => {
   const [count, setCount] = useState(0);
 
@@ -45,20 +85,15 @@ const HomeScreen = () => {
     <View style={styles.container}>
       <Header handleAddPress={handleAddPress} />
 
-      {/* <Buttons.Primary>
-        <Text style={{ color: Colors.light.white, fontWeight: "500" }}>
-          Hello button
-        </Text>
-      </Buttons.Primary>
-
-      <Buttons.Secondary>
-        <Text style={{ color: Colors.light.purple, fontWeight: "500" }}>
-          Hello button
-        </Text>
-      </Buttons.Secondary>
-
-      <View></View>
-      <Text>hello world (index) </Text> */}
+      <ScrollView
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        style={styles.daysContainer}
+      >
+        {days.map((day, index) => (
+          <Day key={index} {...day} />
+        ))}
+      </ScrollView>
 
       {count > 0 && <Text>{count}</Text>}
     </View>
@@ -69,10 +104,8 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.light.background,
     padding: 70,
-    gap: 50,
     flex: 1,
     alignItems: "center",
-    // justifyContent: "center",
   },
   title: {
     fontSize: 20,
@@ -96,6 +129,29 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: Dimensions.get("window").width,
     justifyContent: "space-between",
+  },
+  dayBox: {
+    backgroundColor: Colors.light.lightGrey,
+    height: 60,
+    width: 60,
+    gap: 5,
+    marginRight: 10,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 0,
+  },
+  day: {},
+
+  daysContainer: {
+    height: 200,
+    maxHeight: 60,
+    gap: 20,
+    width: Dimensions.get("window").width,
+    maxWidth: Dimensions.get("window").width,
+
+    paddingHorizontal: 20,
+    marginTop: 10,
   },
 });
 

@@ -9,5 +9,6 @@ export default {
     gray: "#888A9D",
     text: "#1c1c1c",
     background: "#f7f7f7",
+    lightGrey: "#ededed",
   },
 };
