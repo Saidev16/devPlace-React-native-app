@@ -9,7 +9,7 @@ export default {
     dark: "#1F1F1F",
     gray: "#e1e3f0",
     text: "#1c1c1c",
-    background: "#f7f7f7",
+    background: "#fcfcfc",
     lightGrey: "#ededed",
   },
 };
