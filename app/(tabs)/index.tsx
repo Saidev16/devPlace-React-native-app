@@ -1,7 +1,7 @@
 import { Alert, Image, StyleSheet, TouchableOpacity } from "react-native";
 
 import { View } from "@/components/Themed";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Colors from "@/constants/Colors";
 
 import Buttons from "@/app/components/Buttons";
@@ -10,21 +10,23 @@ import { Dimensions } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { ScrollView } from "react-native";
 import { FlashList } from "@shopify/flash-list";
-import CheckBox from "@react-native-community/checkbox";
+import CheckBox from "expo-checkbox";
 
 const DATA = [
   {
+    id: 1,
     title: "First Item",
     startingTime: "02/01/2024 7:37:08 AM",
-    isDone: true,
+    isDone: false,
     uri: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAYAAAA6oTAqAAAAEXRFWHRTb2Z0d2FyZQBwbmdjcnVzaEB1SfMAAABQSURBVGje7dSxCQBACARB+2/ab8BEeQNhFi6WSYzYLYudDQYGBgYGBgYGBgYGBgYGBgZmcvDqYGBgmhivGQYGBgYGBgYGBgYGBgYGBgbmQw+P/eMrC5UTVAAAAABJRU5ErkJggg==",
     color: "blue",
     icon: "run",
   },
   {
+    id: 2,
     title: "Second Item",
     startingTime: "12/11/2024 10:37:08 AM",
-    isDone: true,
+    isDone: false,
     uri: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAYAAAA6oTAqAAAAEXRFWHRTb2Z0d2FyZQBwbmdjcnVzaEB1SfMAAABQSURBVGje7dSxCQBACARB+2/ab8BEeQNhFi6WSYzYLYudDQYGBgYGBgYGBgYGBgYGBgZmcvDqYGBgmhivGQYGBgYGBgYGBgYGBgYGBgbmQw+P/eMrC5UTVAAAAABJRU5ErkJggg==",
     color: "green",
     icon: "youga",
@@ -125,6 +127,8 @@ const HomeScreen = () => {
   const [count, setCount] = useState(0);
   const [selectedDay, setSelectedDay] = useState("1");
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<number>(0);
+  const [data, setData] = useState(DATA);
 
   const handleAddPress = () => {
     Alert.alert("add pressed");
@@ -137,13 +141,43 @@ const HomeScreen = () => {
     //TODO : fetch data for the selected day and update the tasks board with the new data
   };
 
+  const handleTaskClick = (id: number) => {
+    console.log("clicked", id);
+    setSelectedTask(id);
+
+    setData((prevData) =>
+      prevData.map((t) => {
+        if (id == t.id) {
+          return { ...t, isDone: !t.isDone };
+        }
+        return t;
+      })
+    );
+
+    return data.map((t) => {
+      if (id == t.id) {
+        return { ...t, isDone: true };
+      }
+    });
+  };
+
   const renderTask = ({
     item,
   }: {
-    item: { title: string; uri: string; color: string };
+    item: {
+      id: number;
+      title: string;
+      uri: string;
+      color: string;
+      isDone: boolean;
+    };
   }) => {
+    console.log("re-render ");
     return (
-      <View style={styles.taskCard}>
+      <TouchableOpacity
+        style={styles.taskCard}
+        onPress={() => handleTaskClick(item.id)}
+      >
         <View
           style={[styles.taskImgContainer, { backgroundColor: item.color }]}
         >
@@ -164,7 +198,19 @@ const HomeScreen = () => {
             {item.title}
           </Text>
         </View>
-      </View>
+
+        <View style={{ backgroundColor: "transparent" }}>
+          <CheckBox
+            style={styles.checkbox}
+            disabled={false}
+            value={item.isDone}
+            onValueChange={() => {
+              handleTaskClick(item.id);
+            }}
+            color={true ? Colors.light.purple : undefined}
+          />
+        </View>
+      </TouchableOpacity>
     );
   };
 
@@ -200,7 +246,7 @@ const HomeScreen = () => {
           Today
         </Text>
         <FlashList
-          data={DATA}
+          data={data}
           renderItem={renderTask}
           estimatedItemSize={200}
         />
@@ -297,6 +343,13 @@ const styles = StyleSheet.create({
     width: 50,
     justifyContent: "center",
     alignItems: "center",
+  },
+  checkbox: {
+    borderRadius: 100,
+    padding: 10,
+    fontSize: 10,
+    width: 10,
+    height: 10,
   },
 });
 
