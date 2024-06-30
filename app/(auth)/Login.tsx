@@ -23,6 +23,9 @@ export default function Login() {
       <TouchableOpacity onPress={login}>
         <Text>Login</Text>
       </TouchableOpacity>
+      <TouchableOpacity onPress={() => router.replace("/(auth)/Register")}>
+        <Text>Register</Text>
+      </TouchableOpacity>
 
       <TouchableOpacity onPress={() => router.navigate("(tabs)")}>
         <Text>Back</Text>
