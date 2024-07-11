@@ -1,10 +1,11 @@
 import { View } from "@/components/Themed";
 import React, { useEffect, useState } from "react";
 import { Text } from "../components";
-import { StyleSheet, TextInput } from "react-native";
+import { Alert, StyleSheet, TextInput } from "react-native";
 import Colors from "@/constants/Colors";
 import Button from "../components/Buttons/Button";
 import { isValidEmail } from "@/utils/form-validator";
+import { supabase } from "@/lib/supabase";
 
 const initFormValue = {
   name: "",
@@ -44,8 +45,36 @@ const Register = () => {
     }
   };
 
+  const signUpWithEmail = async () => {
+    console.log("fist signup 1");
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.signUp({
+      email: formData.email,
+      password: formData.password,
+    });
+    console.log("fist signup 2");
+
+    if (error) {
+      Alert.alert(error.message);
+    }
+    console.log("fist signup 3");
+
+    if (!session) {
+      Alert.alert("Please check your inbox for email verification !");
+    }
+  };
+
   const handleOnPress = () => {
     validateFields(formData);
+    console.log("here 0");
+
+    console.log(errorMsg);
+    console.log(Object.entries(errorMsg).length !== 0);
+    // if (Object.values(errorMsg).length !== 0) return;
+    console.log("here 1");
+    signUpWithEmail();
   };
 
   useEffect(() => {
@@ -83,7 +112,9 @@ const Register = () => {
 
 const styles = StyleSheet.create({
   pageContainer: {
+    flex: 1,
     backgroundColor: Colors.light.background,
+    paddingTop: 60,
     padding: 20,
     gap: 20,
   },
