@@ -1,3 +1,5 @@
+import { supabase } from "@/lib/supabase";
+import { Session } from "@supabase/supabase-js";
 import { useSegments, useRouter, router } from "expo-router";
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -8,12 +10,11 @@ type User = {
 type AuthType = {
   user: User | null;
   setUser: (user: User | null) => void;
+  session: Session | null;
+  signOut: () => Promise<void>;
 };
 
-const AuthContext = createContext<AuthType>({
-  user: null,
-  setUser: () => {},
-});
+const AuthContext = createContext<AuthType | undefined>(undefined);
 
 export const useAuth = () => useContext(AuthContext);
 
@@ -43,12 +44,21 @@ export function AuthProvider({
   children: JSX.Element;
 }): JSX.Element {
   const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
 
   useProtectedRoute(user);
+
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+    setSession(null);
+  };
 
   const authContext: AuthType = {
     user,
     setUser,
+    session,
+    signOut,
   };
 
   return (

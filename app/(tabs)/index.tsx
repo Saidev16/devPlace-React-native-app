@@ -11,6 +11,8 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import { ScrollView } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import CheckBox from "expo-checkbox";
+import { Session } from "@supabase/supabase-js";
+import { supabase } from "@/lib/supabase";
 
 const DATA = [
   {
@@ -129,6 +131,7 @@ const HomeScreen = () => {
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
   const [selectedTask, setSelectedTask] = useState<number>(0);
   const [data, setData] = useState(DATA);
+  const [session, setSession] = useState<Session | null>(null);
 
   const handleAddPress = () => {
     Alert.alert("add pressed");
@@ -214,9 +217,22 @@ const HomeScreen = () => {
     );
   };
 
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log("session", session);
+      setSession(session);
+    });
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+  }, []);
+
   return (
     <View style={styles.container}>
       <Header handleAddPress={handleAddPress} />
+
+      {session && session.user && <Text>{session.user.id}</Text>}
 
       <ScrollView
         horizontal={true}

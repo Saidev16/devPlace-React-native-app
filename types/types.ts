@@ -28,4 +28,5 @@ export interface IButton extends TouchableOpacityProps {
   disabled?: boolean;
   vibrate?: number | number[];
   onPress?: TouchableOpacityProps["onPress"];
+  label?: string;
 }
