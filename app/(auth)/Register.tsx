@@ -1,5 +1,5 @@
 import { View } from "@/components/Themed";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Text } from "../components";
 import { Alert, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import Colors from "@/constants/Colors";
@@ -54,10 +54,7 @@ const Register = () => {
   const signUpWithEmail = async () => {
     console.log("fist signup 1");
     console.log(formData.email, formData.password);
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email: formData.email,
       password: formData.password,
     });
@@ -67,6 +64,17 @@ const Register = () => {
       console.log("error");
       Alert.alert(error.message);
     }
+    console.log("data", data);
+    if (data.user) {
+      user?.setUser({
+        id: data.user.id,
+        email: data.user.email!,
+        name: data.user.email ?? "",
+      });
+
+      user?.setSession(data.session ?? undefined);
+    }
+
     console.log("fist signup 3");
     router.replace("/(tabs)");
 
@@ -89,13 +97,6 @@ const Register = () => {
   useEffect(() => {
     console.log(formData, errorMsg);
   }, [formData, errorMsg]);
-
-  useEffect(() => {
-    console.log("user", user);
-    if (user) {
-      router.replace("/(tabs)");
-    }
-  }, []);
 
   return (
     <View

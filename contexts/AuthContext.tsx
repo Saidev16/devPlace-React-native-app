@@ -4,13 +4,16 @@ import { useSegments, useRouter, router } from "expo-router";
 import { createContext, useContext, useEffect, useState } from "react";
 
 type User = {
+  id: string;
+  email: string;
   name: string;
 };
 
 type AuthType = {
-  user: User | null;
-  setUser: (user: User | null) => void;
-  session: Session | null;
+  user: User | undefined;
+  setUser: (user: User | undefined) => void;
+  setSession: (session: Session | undefined) => void;
+  session: Session | undefined;
   signOut: () => Promise<void>;
 };
 
@@ -22,6 +25,7 @@ function useProtectedRoute(user: any) {
   const segments = useSegments();
 
   useEffect(() => {
+    console.log("protected route check ");
     const inAuthGroup = segments[0] === "(auth)";
 
     if (
@@ -43,15 +47,15 @@ export function AuthProvider({
 }: {
   children: JSX.Element;
 }): JSX.Element {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<User | undefined>(undefined);
+  const [session, setSession] = useState<Session | undefined>(undefined);
 
   useProtectedRoute(user);
 
   const signOut = async () => {
     await supabase.auth.signOut();
-    setUser(null);
-    setSession(null);
+    setUser(undefined);
+    setSession(undefined);
   };
 
   const authContext: AuthType = {
@@ -59,6 +63,7 @@ export function AuthProvider({
     setUser,
     session,
     signOut,
+    setSession,
   };
 
   return (
