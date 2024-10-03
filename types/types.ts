@@ -30,3 +30,19 @@ export interface IButton extends TouchableOpacityProps {
   onPress?: TouchableOpacityProps["onPress"];
   label?: string;
 }
+
+export type DayType = {
+  date: string;
+  tasks: Task[];
+  pourcentage_accomplished: number;
+};
+
+export type Task = {
+  id: number;
+  created_at: Date;
+  date: Date;
+  name: string;
+  color?: string;
+  reminders?: string[];
+  isDone: boolean;
+};

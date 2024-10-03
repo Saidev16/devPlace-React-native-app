@@ -1,11 +1,11 @@
 import { View, Text, TouchableOpacity, Alert } from "react-native";
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { router } from "expo-router";
 import { supabase } from "@/lib/supabase";
 
 const SettingsScreen = () => {
-  const user = useAuth();
+  const { signOut, user } = useAuth();
 
   console.log("user", user);
   useEffect(() => {
@@ -33,10 +33,11 @@ const SettingsScreen = () => {
 
       <TouchableOpacity
         onPress={() => {
-          router.replace("/(auth)/Register");
+          // router.replace("/(auth)/Register");
+          signOut();
         }}
       >
-        <Text>Register</Text>
+        <Text>Logout</Text>
       </TouchableOpacity>
     </View>
   );

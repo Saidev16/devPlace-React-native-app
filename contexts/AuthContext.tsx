@@ -19,7 +19,13 @@ type AuthType = {
 
 const AuthContext = createContext<AuthType | undefined>(undefined);
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = (): AuthType => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};
 
 function useProtectedRoute(user: any) {
   const segments = useSegments();
@@ -34,7 +40,7 @@ function useProtectedRoute(user: any) {
       !inAuthGroup
     ) {
       // Redirect to the sign-in page.
-      router.replace("/(auth)/Register");
+      router.replace("/(auth)/Login");
     } else if (user && inAuthGroup) {
       // Redirect away from the sign-in page.
       router.replace("/(tabs)");
@@ -56,6 +62,7 @@ export function AuthProvider({
     await supabase.auth.signOut();
     setUser(undefined);
     setSession(undefined);
+    router.replace("/(auth)/Login");
   };
 
   const authContext: AuthType = {

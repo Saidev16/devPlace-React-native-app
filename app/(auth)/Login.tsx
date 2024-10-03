@@ -15,18 +15,30 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState<boolean>(false);
 
-  const setUser = useAuth();
+  const user = useAuth();
 
   const signInWithEmail = async () => {
     setLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
     });
 
     if (error) Alert.alert(error.message);
+    console.log("login data", data);
     setLoading(false);
+
+    if (data.user) {
+      user?.setUser({
+        id: data.user.id,
+        email: data.user.email!,
+        name: data.user.email ?? "",
+      });
+
+      user?.setSession(data.session ?? undefined);
+    }
+    router.replace("/(tabs)");
   };
 
   console.log("login page");
@@ -44,7 +56,7 @@ export default function Login() {
     >
       <View style={styles.screenContainer}>
         <TouchableOpacity>
-          <Text style={styles.loginText}>Let's get started</Text>
+          <Text style={styles.loginText}>Login</Text>
           <Text style={styles.loginParagraph}>
             Sign up now for the habit tracker app and embark on a journey of
             positive change!
@@ -52,9 +64,17 @@ export default function Login() {
         </TouchableOpacity>
 
         <View style={{ gap: 18, marginBottom: 40 }}>
-          <Input placeholder="Name" />
-          <Input placeholder="Email" />
-          <Input secureTextEntry={true} placeholder="Password" />
+          <Input
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.nativeEvent.text)}
+          />
+          <Input
+            secureTextEntry={true}
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.nativeEvent.text)}
+          />
         </View>
 
         <View>

@@ -13,6 +13,7 @@ import { FlashList } from "@shopify/flash-list";
 import CheckBox from "expo-checkbox";
 import { Session } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
+import { Task } from "@/types/types";
 
 const DATA = [
   {
@@ -127,21 +128,53 @@ const Day = ({
 
 const HomeScreen = () => {
   const [count, setCount] = useState(0);
-  const [selectedDay, setSelectedDay] = useState("1");
+  const [selectedDay, setSelectedDay] = useState(new Date());
   const [toggleCheckBox, setToggleCheckBox] = useState(false);
-  const [selectedTask, setSelectedTask] = useState<number>(0);
+  const [selected, setSelectedTask] = useState<number>(0);
   const [data, setData] = useState(DATA);
   const [session, setSession] = useState<Session | null>(null);
+  const [days, setDays] = useState<Date[] | null>(null);
+  const [tasks, setTasks] = useState<Task[] | null>(null);
+
+  const fetchDays = () => {
+    const daysButtons: Date[] = [];
+
+    for (let i = -5; i <= 5; i++) {
+      const date = new Date();
+      date.setDate(date.getDate() + 1);
+
+      daysButtons.push(date);
+    }
+
+    console.log("daysButtons");
+    console.log(daysButtons);
+    setDays(daysButtons);
+  };
 
   const handleAddPress = () => {
     Alert.alert("add pressed");
   };
 
-  const onDayChange = (id: string) => {
-    console.log("selected day", id);
-    setSelectedDay(id);
+  const onDayChange = (date: Date) => {
+    console.log("selected day", date);
+    setSelectedDay(date);
+
+    fetchTasks(date);
 
     //TODO : fetch data for the selected day and update the tasks board with the new data
+  };
+
+  const fetchTasks = async (date: Date) => {
+    const { data, error } = await supabase
+      .from("tasks")
+      .select("*")
+      .eq("date", date.toISOString().split("T")[0]);
+
+    if (error) {
+      console.error(error);
+    }
+
+    setTasks(data);
   };
 
   const handleTaskClick = (id: number) => {
@@ -228,25 +261,29 @@ const HomeScreen = () => {
     });
   }, []);
 
+  useEffect(() => {
+    fetchDays();
+    onDayChange(selectedDay);
+  }, []);
   return (
     <View style={styles.container}>
       <Header handleAddPress={handleAddPress} />
-
-      {session && session.user && <Text>{session.user.id}</Text>}
 
       <ScrollView
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         style={styles.daysContainer}
       >
-        {days.map((day) => (
-          <Day
-            key={day.id}
-            active={day.id.toString() == selectedDay}
-            onPress={() => onDayChange(day.id.toString())}
-            {...day}
-          />
-        ))}
+        {days &&
+          days.map((day: Date) => (
+            <Day
+              // key={day.id}
+              date={day.toISOString()}
+              active={day == selectedDay}
+              onPress={() => onDayChange(day)}
+              {...day}
+            />
+          ))}
       </ScrollView>
 
       <View
