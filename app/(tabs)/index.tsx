@@ -102,6 +102,7 @@ const Day = ({
   onPress: () => void;
 }) => {
   const day = new Date(date).toLocaleString("en-us", { weekday: "long" });
+  const dateNumber = new Date(date).getDate();
 
   return (
     <TouchableOpacity
@@ -120,7 +121,7 @@ const Day = ({
         {day.substring(0, 3)}
       </Text>
       <Text size={15} fontWeight="500">
-        {date.slice(0, 2)}
+        {dateNumber}
       </Text>
     </TouchableOpacity>
   );
@@ -138,12 +139,15 @@ const HomeScreen = () => {
 
   const fetchDays = () => {
     const daysButtons: Date[] = [];
-
+    let step = 1;
     for (let i = -5; i <= 5; i++) {
+      console.log("i ", i);
+
       const date = new Date();
-      date.setDate(date.getDate() + 1);
+      date.setDate(date.getDate() + i);
 
       daysButtons.push(date);
+      step++;
     }
 
     console.log("daysButtons");
