@@ -45,4 +45,6 @@ export type Task = {
   color?: string;
   reminders?: string[];
   isDone: boolean;
+  icon?: string;
+  starting_date: Date;
 };

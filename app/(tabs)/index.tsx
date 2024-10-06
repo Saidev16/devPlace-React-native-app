@@ -190,6 +190,7 @@ const HomeScreen = () => {
 
     if (error) {
       console.error(error);
+      return;
     }
 
     setTasks(data);
@@ -214,17 +215,7 @@ const HomeScreen = () => {
     });
   };
 
-  const renderTask = ({
-    item,
-  }: {
-    item: {
-      id: number;
-      title: string;
-      uri: string;
-      color: string;
-      isDone: boolean;
-    };
-  }) => {
+  const renderTask = ({ item }: { item: Task }) => {
     return (
       <TouchableOpacity
         style={styles.taskCard}
@@ -237,17 +228,17 @@ const HomeScreen = () => {
             width={25}
             height={25}
             source={{
-              uri: item.uri,
+              uri: item.icon,
             }}
           />
         </View>
 
         <View style={styles.taskCardMiddle}>
           <Text fontWeight={400} fontSize={15}>
-            {item.title}
+            {item.name}
           </Text>
           <Text color={Colors.light.gray} fontWeight={400} fontSize={15}>
-            {item.title}
+            {item.starting_date.toString()}
           </Text>
         </View>
 
@@ -335,11 +326,16 @@ const HomeScreen = () => {
         <Text fontSize={22} fontWeight={500}>
           Today
         </Text>
-        <FlashList
-          data={data}
-          renderItem={renderTask}
-          estimatedItemSize={200}
-        />
+
+        {tasks && tasks.length > 0 ? (
+          <FlashList
+            data={tasks}
+            renderItem={renderTask}
+            estimatedItemSize={200}
+          />
+        ) : (
+          <Text>No Tasks for today</Text>
+        )}
       </View>
       {count > 0 && <Text>{count}</Text>}
     </View>
