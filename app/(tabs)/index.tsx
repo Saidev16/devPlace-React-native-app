@@ -1,7 +1,7 @@
 import { Alert, Image, StyleSheet, TouchableOpacity } from "react-native";
 
 import { View } from "@/components/Themed";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Colors from "@/constants/Colors";
 
 import Buttons from "@/app/components/Buttons";
@@ -137,12 +137,12 @@ const HomeScreen = () => {
   const [days, setDays] = useState<Date[] | null>(null);
   const [tasks, setTasks] = useState<Task[] | null>(null);
 
-  const fetchDays = () => {
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  const fetchDaysAndScroll = () => {
     const daysButtons: Date[] = [];
     let step = 1;
     for (let i = -5; i <= 5; i++) {
-      console.log("i ", i);
-
       const date = new Date();
       date.setDate(date.getDate() + i);
 
@@ -150,9 +150,23 @@ const HomeScreen = () => {
       step++;
     }
 
-    console.log("daysButtons");
     console.log(daysButtons);
     setDays(daysButtons);
+
+    setTimeout(() => {
+      if (
+        scrollViewRef.current &&
+        daysButtons?.length &&
+        daysButtons?.length > 0
+      ) {
+        const middleIndex = Math.floor(daysButtons.length / 2);
+
+        scrollViewRef.current.scrollTo({
+          x: middleIndex * 60,
+          animated: false,
+        });
+      }
+    }, 0);
   };
 
   const handleAddPress = () => {
@@ -182,7 +196,6 @@ const HomeScreen = () => {
   };
 
   const handleTaskClick = (id: number) => {
-    console.log("clicked", id);
     setSelectedTask(id);
 
     setData((prevData) =>
@@ -212,7 +225,6 @@ const HomeScreen = () => {
       isDone: boolean;
     };
   }) => {
-    console.log("re-render ");
     return (
       <TouchableOpacity
         style={styles.taskCard}
@@ -256,7 +268,6 @@ const HomeScreen = () => {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log("session", session);
       setSession(session);
     });
 
@@ -266,24 +277,46 @@ const HomeScreen = () => {
   }, []);
 
   useEffect(() => {
-    fetchDays();
+    fetchDaysAndScroll();
     onDayChange(selectedDay);
   }, []);
+
+  useEffect(() => {
+    console.log("days ,", days);
+    console.log(" selected date ", selectedDay.toDateString());
+  }, [days]);
+
+  // useEffect(() => {
+  //   if (!days) return;
+  //   console.log("change ref");
+  //   console.log("scroll view ", scrollViewRef.current);
+  //   console.log("days length, ", days?.length);
+  //   if (scrollViewRef.current && days?.length && days?.length > 0) {
+  //     const middleIndex = Math.floor(days.length / 2);
+  //     console.log("middle index ", middleIndex);
+
+  //     scrollViewRef.current.scrollTo({
+  //       x: middleIndex * 60,
+  //       animated: false,
+  //     });
+  //   }
+  // }, [days]);
   return (
     <View style={styles.container}>
       <Header handleAddPress={handleAddPress} />
 
       <ScrollView
+        ref={scrollViewRef}
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         style={styles.daysContainer}
       >
         {days &&
-          days.map((day: Date) => (
+          days.map((day: Date, index: number) => (
             <Day
-              // key={day.id}
+              key={index}
               date={day.toISOString()}
-              active={day == selectedDay}
+              active={day.toDateString() == selectedDay.toDateString()}
               onPress={() => onDayChange(day)}
               {...day}
             />
