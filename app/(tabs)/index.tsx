@@ -196,23 +196,42 @@ const HomeScreen = () => {
     setTasks(data);
   };
 
+  const updateTask = async (id: number, isDone: boolean) => {
+    console.log("isTaskDone1", id);
+    console.log("isTaskDone", !isDone);
+    const { error } = await supabase
+      .from("tasks")
+      .update({ isDone: !isDone })
+      .eq("id", id);
+    if (error) {
+      Alert.alert(error.message);
+      return;
+    }
+
+    console.log("update with success");
+  };
+
   const handleTaskClick = (id: number) => {
+    if (!tasks) return;
+
     setSelectedTask(id);
 
-    setData((prevData) =>
-      prevData.map((t) => {
+    let task = tasks.find((t) => {
+      t.id == id;
+    });
+    setTasks(() =>
+      tasks.map((t) => {
         if (id == t.id) {
+          task = t;
           return { ...t, isDone: !t.isDone };
         }
         return t;
       })
     );
 
-    return data.map((t) => {
-      if (id == t.id) {
-        return { ...t, isDone: true };
-      }
-    });
+    if (!task) return;
+
+    updateTask(id, task.isDone);
   };
 
   const renderTask = ({ item }: { item: Task }) => {
@@ -277,21 +296,6 @@ const HomeScreen = () => {
     console.log(" selected date ", selectedDay.toDateString());
   }, [days]);
 
-  // useEffect(() => {
-  //   if (!days) return;
-  //   console.log("change ref");
-  //   console.log("scroll view ", scrollViewRef.current);
-  //   console.log("days length, ", days?.length);
-  //   if (scrollViewRef.current && days?.length && days?.length > 0) {
-  //     const middleIndex = Math.floor(days.length / 2);
-  //     console.log("middle index ", middleIndex);
-
-  //     scrollViewRef.current.scrollTo({
-  //       x: middleIndex * 60,
-  //       animated: false,
-  //     });
-  //   }
-  // }, [days]);
   return (
     <View style={styles.container}>
       <Header handleAddPress={handleAddPress} />
