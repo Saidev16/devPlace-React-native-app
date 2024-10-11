@@ -14,6 +14,7 @@ import CheckBox from "expo-checkbox";
 import { Session } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
 import { Task } from "@/types/types";
+import { router } from "expo-router";
 
 const DATA = [
   {
@@ -291,14 +292,9 @@ const HomeScreen = () => {
     onDayChange(selectedDay);
   }, []);
 
-  useEffect(() => {
-    console.log("days ,", days);
-    console.log(" selected date ", selectedDay.toDateString());
-  }, [days]);
-
   return (
     <View style={styles.container}>
-      <Header handleAddPress={handleAddPress} />
+      <Header handleAddPress={() => router.replace("(tasks)")} />
 
       <ScrollView
         ref={scrollViewRef}

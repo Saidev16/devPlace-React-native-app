@@ -2,13 +2,14 @@ import { Link, router } from "expo-router";
 import { View, Text, Alert, TextInput, StyleSheet } from "react-native";
 import { useAuth } from "../../contexts/AuthContext";
 import { TouchableOpacity } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import Input from "../components/Inputs/index";
 import Colors from "@/constants/Colors";
 import Button from "../components/Buttons/Button";
 import Buttons from "../components/Buttons";
 import { color } from "react-native-elements/dist/helpers";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -29,19 +30,20 @@ export default function Login() {
     console.log("login data", data);
     setLoading(false);
 
+    if (!data.user) return;
+    const newUser = {
+      id: data.user.id,
+      email: data.user.email!,
+      name: data.user.email ?? "",
+    };
     if (data.user) {
-      user?.setUser({
-        id: data.user.id,
-        email: data.user.email!,
-        name: data.user.email ?? "",
-      });
+      user?.setUser(newUser);
 
       user?.setSession(data.session ?? undefined);
+      await AsyncStorage.setItem("user", JSON.stringify(newUser));
     }
     router.replace("/(tabs)");
   };
-
-  console.log("login page");
 
   return (
     <View

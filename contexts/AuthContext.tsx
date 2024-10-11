@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Session } from "@supabase/supabase-js";
 import { useSegments, useRouter, router } from "expo-router";
 import { createContext, useContext, useEffect, useState } from "react";
@@ -60,11 +61,23 @@ export function AuthProvider({
 
   const signOut = async () => {
     await supabase.auth.signOut();
+    await AsyncStorage.removeItem("user");
+
     setUser(undefined);
     setSession(undefined);
     router.replace("/(auth)/Login");
   };
 
+  const checkSavedUser = async () => {
+    const localUser = await AsyncStorage.getItem("user");
+
+    if (localUser) {
+      setUser(JSON.parse(localUser));
+    }
+  };
+  useEffect(() => {
+    checkSavedUser();
+  }, []);
   const authContext: AuthType = {
     user,
     setUser,
