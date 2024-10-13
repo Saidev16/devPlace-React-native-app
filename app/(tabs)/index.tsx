@@ -15,6 +15,7 @@ import { Session } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
 import { Task } from "@/types/types";
 import { router } from "expo-router";
+import { TaskCard } from "../components/Cards";
 
 const DATA = [
   {
@@ -198,8 +199,6 @@ const HomeScreen = () => {
   };
 
   const updateTask = async (id: number, isDone: boolean) => {
-    console.log("isTaskDone1", id);
-    console.log("isTaskDone", !isDone);
     const { error } = await supabase
       .from("tasks")
       .update({ isDone: !isDone })
@@ -237,43 +236,13 @@ const HomeScreen = () => {
 
   const renderTask = ({ item }: { item: Task }) => {
     return (
-      <TouchableOpacity
-        style={styles.taskCard}
-        onPress={() => handleTaskClick(item.id)}
-      >
-        <View
-          style={[styles.taskImgContainer, { backgroundColor: item.color }]}
-        >
-          <Image
-            width={25}
-            height={25}
-            source={{
-              uri: item.icon,
-            }}
-          />
-        </View>
-
-        <View style={styles.taskCardMiddle}>
-          <Text fontWeight={400} fontSize={15}>
-            {item.name}
-          </Text>
-          <Text color={Colors.light.gray} fontWeight={400} fontSize={15}>
-            {item.starting_date.toString()}
-          </Text>
-        </View>
-
-        <View style={{ backgroundColor: "transparent" }}>
-          <CheckBox
-            style={styles.checkbox}
-            disabled={false}
-            value={item.isDone}
-            onValueChange={() => {
-              handleTaskClick(item.id);
-            }}
-            color={true ? Colors.light.purple : undefined}
-          />
-        </View>
-      </TouchableOpacity>
+      <View>
+        <TaskCard
+          item={item}
+          handleTaskClick={handleTaskClick}
+          hideCheckBox={false}
+        />
+      </View>
     );
   };
 
@@ -294,7 +263,7 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Header handleAddPress={() => router.replace("(tasks)")} />
+      <Header handleAddPress={() => router.navigate("(tasks)")} />
 
       <ScrollView
         ref={scrollViewRef}
