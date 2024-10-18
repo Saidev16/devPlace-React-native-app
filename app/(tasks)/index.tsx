@@ -1,4 +1,4 @@
-import { useNavigation } from "expo-router";
+import { Link, router, useNavigation } from "expo-router";
 import { Text } from "../components";
 import { useEffect } from "react";
 import { TaskCard } from "../components/Cards";
@@ -7,6 +7,7 @@ import { View } from "@/components/Themed";
 import { Alert, Dimensions, StyleSheet } from "react-native";
 import Colors from "@/constants/Colors";
 import { ScrollView } from "react-native";
+import Buttons from "../components/Buttons";
 
 export default function create() {
   const navigation = useNavigation();
@@ -35,14 +36,39 @@ export default function create() {
           );
         })}
       </ScrollView>
+      <View style={{ width: "100%", gap: 10 }}>
+        <Buttons.Secondary
+          onPress={() => router.replace("(tasks)/CreateTask")}
+          label="Create custom task"
+          width={"auto"}
+        />
+
+        <Link
+          href={{
+            pathname: "(tasks)/CreateTask",
+            params: { icon: "icon1", title: "title 1" },
+          }}
+        >
+          <Buttons.Primary
+            onPress={() => {
+              router.push({
+                pathname: "(tasks)/CreateTask",
+                params: { icon: "icon1", title: "title 1" },
+              });
+            }}
+            label="Continue"
+            width={"100%"}
+          />
+        </Link>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    // backgroundColor: Colors.light.white,
-    backgroundColor: "green",
+    backgroundColor: Colors.light.white,
+    // backgroundColor: "green",
     padding: 30,
     flex: 1,
     alignItems: "center",

@@ -13,7 +13,6 @@ export const Primary: FC<IButton> = (props) => {
       justify="center"
       radius={10}
       align="center"
-      // label={}
       {...props}
     >
       {props.label && (
@@ -28,7 +27,21 @@ export const Primary: FC<IButton> = (props) => {
 
 export const Secondary: FC<IButton> = (props) => {
   return (
-    <Button width={"auto"} {...props} justify="center" align="center">
+    <Button
+      outlined
+      width={props.width ?? 200}
+      justify="center"
+      radius={10}
+      align="center"
+      {...props}
+    >
+      {props.label && (
+        <Text
+          style={{ color: Colors.light.purple, fontSize: 14, fontWeight: 500 }}
+        >
+          {props.label}
+        </Text>
+      )}
       {props.children}
     </Button>
   );

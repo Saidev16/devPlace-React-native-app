@@ -7,6 +7,7 @@ import {
 import React, { useCallback } from "react";
 import { TouchableOpacity } from "react-native";
 import { IButton } from "@/types/types";
+import Colors from "@/constants/Colors";
 
 const Button = ({
   children,
@@ -37,7 +38,7 @@ const Button = ({
 
     outlined && {
       borderWidth: 1,
-      borderColor: color,
+      borderColor: Colors.light.purple,
       backgroundColor: "transparent",
     },
     radius && { borderRadius: radius },
