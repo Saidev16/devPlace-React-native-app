@@ -15,19 +15,14 @@ const TaskCard = ({
   handleTaskClick: (id: number) => void;
   hideCheckBox: boolean;
 }): React.ReactElement => {
+  console.log("item.icon", item.icon);
   return (
     <TouchableOpacity
       style={styles.taskCard}
       onPress={() => handleTaskClick(item.id)}
     >
       <View style={[styles.taskImgContainer, { backgroundColor: item.color }]}>
-        <Image
-          width={25}
-          height={25}
-          source={{
-            uri: item.icon,
-          }}
-        />
+        <Text style={{ fontSize: 30 }}>{item.icon}</Text>
       </View>
 
       <View style={styles.taskCardMiddle}>

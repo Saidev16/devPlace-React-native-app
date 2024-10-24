@@ -8,6 +8,8 @@ import { Alert, Dimensions, StyleSheet } from "react-native";
 import Colors from "@/constants/Colors";
 import { ScrollView } from "react-native";
 import Buttons from "../components/Buttons";
+import Picker from "@emoji-mart/react";
+import data from "@emoji-mart/data";
 
 export default function create() {
   const navigation = useNavigation();
@@ -25,6 +27,8 @@ export default function create() {
   }
   return (
     <View style={styles.container}>
+      {/* <Picker data={data} onEmojiSelect={console.log} /> */}
+
       <ScrollView style={styles.cardsContainer}>
         {customTasks.map((t) => {
           return (
