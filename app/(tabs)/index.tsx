@@ -217,7 +217,7 @@ const HomeScreen = () => {
     setSelectedTask(id);
 
     let task = tasks.find((t) => {
-      t.id == id;
+      if (t.id == id) return t;
     });
     setTasks(() =>
       tasks.map((t) => {
@@ -230,7 +230,6 @@ const HomeScreen = () => {
     );
 
     if (!task) return;
-
     updateTask(id, task.isDone);
   };
 

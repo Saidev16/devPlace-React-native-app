@@ -38,8 +38,8 @@ export type DayType = {
 };
 
 export type Task = {
-  id: number;
-  created_at: Date;
+  id?: number;
+  created_at?: Date;
   date: Date;
   name: string;
   color?: string;

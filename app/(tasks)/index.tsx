@@ -57,7 +57,7 @@ export default function create() {
             onPress={() => {
               router.push({
                 pathname: "(tasks)/CreateTask",
-                params: { icon: "icon1", title: "title 1" },
+                params: { icon: "🏃", title: "title 1" },
               });
             }}
             label="Continue"
