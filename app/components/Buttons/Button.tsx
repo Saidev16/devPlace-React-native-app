@@ -31,6 +31,7 @@ const Button = ({
   disabled,
   vibrate,
   onPress,
+  direction,
   ...props
 }: IButton) => {
   const btnStyle = StyleSheet.flatten([
@@ -61,6 +62,7 @@ const Button = ({
     bottom && { bottom },
     left && { left },
     disabled && { opacity: 0.5 },
+    direction && { flexDirection: direction, gap: 10 },
   ]) as ViewStyle;
 
   const handleOnPress = useCallback(

@@ -47,23 +47,16 @@ export default function create() {
           width={"auto"}
         />
 
-        <Link
-          href={{
-            pathname: "(tasks)/CreateTask",
-            params: { icon: "icon1", title: "title 1" },
+        <Buttons.Primary
+          onPress={() => {
+            router.push({
+              pathname: "(tasks)/CreateTask",
+              params: { icon: "🏃", title: "title 1" },
+            });
           }}
-        >
-          <Buttons.Primary
-            onPress={() => {
-              router.push({
-                pathname: "(tasks)/CreateTask",
-                params: { icon: "🏃", title: "title 1" },
-              });
-            }}
-            label="Continue"
-            width={"100%"}
-          />
-        </Link>
+          label="Continue"
+          width={"100%"}
+        />
       </View>
     </View>
   );

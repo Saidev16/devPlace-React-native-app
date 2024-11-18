@@ -29,6 +29,7 @@ export interface IButton extends TouchableOpacityProps {
   vibrate?: number | number[];
   onPress?: TouchableOpacityProps["onPress"];
   label?: string;
+  direction?: "column" | "row";
 }
 
 export type DayType = {
