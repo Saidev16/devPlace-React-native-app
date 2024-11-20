@@ -1,6 +1,6 @@
 import { Link, router, useNavigation } from "expo-router";
 import { Text } from "../components";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { TaskCard } from "../components/Cards";
 import useFetchTasks from "@/hooks/useFetchTasks";
 import { View } from "@/components/Themed";
@@ -10,11 +10,25 @@ import { ScrollView } from "react-native";
 import Buttons from "../components/Buttons";
 import Picker from "@emoji-mart/react";
 import data from "@emoji-mart/data";
+import { useCreateTask } from "@/hooks/useCreateTask";
+import { Task } from "@/types/types";
 
 export default function create() {
   const navigation = useNavigation();
 
   const { customTasks, isLoading, error } = useFetchTasks();
+  const [selectedTask, setSelectedTask] = useState<Task>();
+  const { saveData, loading } = useCreateTask(true);
+
+  const handleCreateTask = async () => {
+    if (!selectedTask) return;
+    console.log("this is the selected task ,", selectedTask);
+    const error = await saveData(selectedTask);
+
+    if (error) {
+      Alert.alert(error);
+    }
+  };
 
   useEffect(() => {
     navigation.setOptions({ title: "New task", headerShadowVisible: false });
@@ -25,6 +39,8 @@ export default function create() {
   if (error) {
     Alert.alert(error);
   }
+
+  console.log("selectedTask", selectedTask);
   return (
     <View style={styles.container}>
       {/* <Picker data={data} onEmojiSelect={console.log} /> */}
@@ -34,8 +50,14 @@ export default function create() {
           return (
             <TaskCard
               item={t}
-              handleTaskClick={() => console.log("clicked")}
+              handleTaskClick={() =>
+                setSelectedTask((prevState) => {
+                  if (prevState?.id == t.id) return null;
+                  return t;
+                })
+              }
               hideCheckBox={true}
+              selected={selectedTask?.id == t.id}
             />
           );
         })}
@@ -49,10 +71,7 @@ export default function create() {
 
         <Buttons.Primary
           onPress={() => {
-            router.push({
-              pathname: "(tasks)/CreateTask",
-              params: { icon: "🏃", title: "title 1" },
-            });
+            handleCreateTask();
           }}
           label="Continue"
           width={"100%"}

@@ -5,7 +5,7 @@ import { View } from "@/components/Themed";
 import { Alert, StyleSheet } from "react-native";
 import Colors from "@/constants/Colors";
 import ColorPicker, { Panel1, HueSlider } from "reanimated-color-picker";
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import Buttons from "../components/Buttons";
 import { Task } from "@/types/types";
 import { useCreateTask } from "@/hooks/useCreateTask";
@@ -22,23 +22,42 @@ const CreateTask = (): React.ReactElement => {
   const { saveData, loading } = useCreateTask(true);
 
   console.log("icon data", icon);
-  console.log("title", title);
+  console.log("title", title, task?.name);
 
   const onSelectColor = ({ hex }: { hex: string }) => {
     // do something with the selected color.
     setTaskColor(hex);
   };
 
+  const validateFields = (fields: Task): string => {
+    let error = "";
+    console.log(fields);
+    Object.keys(fields).forEach((key, index) => {
+      const toValidate = key == "name" || key == "icon" || key == "color";
+      console.log("key, fields[key]", key, fields[key]);
+      console.log("to validate ,", toValidate);
+      if (toValidate && fields[key] == "") {
+        error = `the field ${key} cannot be empty `;
+      }
+    });
+
+    return error;
+  };
   const saveTaskHandler = async () => {
     const newTask = {
       date: new Date(),
-      name: title ?? task?.name,
+      name: task?.name == "" ? title : task?.name ?? "",
       isDone: false,
       starting_date: new Date(),
       icon: icon ?? newIcon,
       color: taskColor,
     };
 
+    const errMsg = validateFields(newTask);
+    if (errMsg) {
+      Alert.alert(errMsg);
+      return;
+    }
     // return;
 
     const error = await saveData(newTask);
@@ -62,6 +81,11 @@ const CreateTask = (): React.ReactElement => {
     });
   };
 
+  useLayoutEffect(() => {
+    setTask((prevState) => {
+      return { ...prevState, name: title };
+    });
+  }, [title]);
   {
     loading && <Text>Loading...</Text>;
   }
@@ -70,6 +94,7 @@ const CreateTask = (): React.ReactElement => {
       <View style={styles.formContainer}>
         <Text>What do you want to do ?</Text>
         <Input
+          value={task?.name}
           placeholder="Name of habit"
           onChangeText={(value) => onFormChange("name", value)}
         />

@@ -1,7 +1,7 @@
 import { Alert, Image, StyleSheet, TouchableOpacity } from "react-native";
 
 import { View } from "@/components/Themed";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Colors from "@/constants/Colors";
 
 import Buttons from "@/app/components/Buttons";
@@ -16,6 +16,7 @@ import { supabase } from "@/lib/supabase";
 import { Task } from "@/types/types";
 import { router } from "expo-router";
 import { TaskCard } from "../components/Cards";
+import { languageContext } from "@/contexts/LanguageContext";
 
 const DATA = [
   {
@@ -140,6 +141,8 @@ const HomeScreen = () => {
   const [tasks, setTasks] = useState<Task[] | null>(null);
 
   const scrollViewRef = useRef<ScrollView>(null);
+
+  const { language } = useContext(languageContext);
 
   const fetchDaysAndScroll = () => {
     const daysButtons: Date[] = [];
