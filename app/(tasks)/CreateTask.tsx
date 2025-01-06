@@ -2,7 +2,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { Text } from "../components";
 import Input from "../components/Inputs";
 import { View } from "@/components/Themed";
-import { Alert, StyleSheet } from "react-native";
+import { Alert, StyleSheet, Touchable, TouchableOpacity } from "react-native";
 import Colors from "@/constants/Colors";
 import ColorPicker, { Panel1, HueSlider } from "reanimated-color-picker";
 import { useLayoutEffect, useState } from "react";
@@ -10,6 +10,7 @@ import Buttons from "../components/Buttons";
 import { Task } from "@/types/types";
 import { useCreateTask } from "@/hooks/useCreateTask";
 import EmojiPicker from "rn-emoji-keyboard";
+import Checkbox from "expo-checkbox";
 
 const CreateTask = (): React.ReactElement => {
   const { icon, title } = useLocalSearchParams();
@@ -18,8 +19,9 @@ const CreateTask = (): React.ReactElement => {
   const [newIcon, setNewIcon] = useState("");
   const [isColorPickerOpen, setIsColorPickerOpen] = useState(false);
   const [isPickerOpen, setIsPickerOpen] = useState<boolean>(false);
+  const [saveAsCustomTask, setSaveAsCustomTask] = useState<boolean>(false);
 
-  const { saveData, loading } = useCreateTask(true);
+  const { saveData, loading, saveCustomTask } = useCreateTask(true);
 
   console.log("icon data", icon);
   console.log("title", title, task?.name);
@@ -34,7 +36,6 @@ const CreateTask = (): React.ReactElement => {
     console.log(fields);
     Object.keys(fields).forEach((key, index) => {
       const toValidate = key == "name" || key == "icon" || key == "color";
-      console.log("key, fields[key]", key, fields[key]);
       console.log("to validate ,", toValidate);
       if (toValidate && fields[key] == "") {
         error = `the field ${key} cannot be empty `;
@@ -53,6 +54,12 @@ const CreateTask = (): React.ReactElement => {
       color: taskColor,
     };
 
+    const custom_task = {
+      name: task?.name == "" ? title : task?.name ?? "",
+      icon: icon ?? newIcon,
+      color: taskColor,
+    };
+
     const errMsg = validateFields(newTask);
     if (errMsg) {
       Alert.alert(errMsg);
@@ -61,6 +68,9 @@ const CreateTask = (): React.ReactElement => {
     // return;
 
     const error = await saveData(newTask);
+    if (saveAsCustomTask) {
+      await saveCustomTask(custom_task);
+    }
     if (error) {
       Alert.alert(error);
       return;
@@ -153,6 +163,22 @@ const CreateTask = (): React.ReactElement => {
           onClose={() => setIsPickerOpen(false)}
         />
 
+        <TouchableOpacity
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 5,
+            marginTop: 10,
+            marginBottom: 20,
+          }}
+          onPress={() => setSaveAsCustomTask((prevstate) => !prevstate)}
+        >
+          <Checkbox value={saveAsCustomTask} style={styles.checkbox} />
+          <Text style={{ fontSize: 14 }}>
+            Do you want to save this task as a custom task ?
+          </Text>
+        </TouchableOpacity>
+
         <Buttons.Primary label="Continue " onPress={handleSaveTask} />
       </View>
     </View>
@@ -170,5 +196,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   formContainer: {},
+  checkbox: {
+    borderRadius: 100,
+    padding: 8,
+    fontSize: 10,
+    width: 3,
+    height: 3,
+  },
 });
 export default CreateTask;

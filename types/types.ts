@@ -49,3 +49,10 @@ export type Task = {
   icon?: string;
   starting_date: Date;
 };
+export type CustomTask = {
+  id?: number;
+  created_at?: Date;
+  name: string;
+  color?: string;
+  icon?: string;
+};
