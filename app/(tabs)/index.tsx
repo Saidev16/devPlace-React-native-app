@@ -265,7 +265,16 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Header handleAddPress={() => router.navigate("(tasks)")} />
+      <Header
+        handleAddPress={() =>
+          router.push({
+            pathname: "/(tasks)",
+            params: {
+              date: selectedDay.toISOString(),
+            },
+          })
+        }
+      />
 
       <ScrollView
         ref={scrollViewRef}

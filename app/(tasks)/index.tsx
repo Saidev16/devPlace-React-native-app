@@ -1,4 +1,4 @@
-import { Link, router, useNavigation } from "expo-router";
+import { Link, router, useLocalSearchParams, useNavigation } from "expo-router";
 import { Text } from "../components";
 import { useEffect, useState } from "react";
 import { TaskCard } from "../components/Cards";
@@ -19,15 +19,31 @@ export default function create() {
   const { customTasks, isLoading, error } = useFetchTasks();
   const [selectedTask, setSelectedTask] = useState<Task>();
   const { saveData, loading } = useCreateTask(true);
-
+  const { date } = useLocalSearchParams();
+  console.log("selectedDate ", date);
   const handleCreateTask = async () => {
+    console.log("create task 1");
     if (!selectedTask) return;
-    console.log("this is the selected task ,", selectedTask);
-    const error = await saveData(selectedTask);
 
+    //Exclude the id from selectedTask
+    const { id, ...rest } = selectedTask;
+
+    // Adding the missing fields for a Task
+    const formattedTask = {
+      ...rest,
+      date: new Date(date.toString()),
+      isDone: false,
+      starting_date: new Date(date.toString()),
+      created_at: new Date(),
+    };
+    const error = await saveData(formattedTask);
+    console.log("log error", error);
     if (error) {
       Alert.alert(error);
+      return;
     }
+
+    router.navigate("/(tabs)");
   };
 
   useEffect(() => {
@@ -41,6 +57,8 @@ export default function create() {
   }
 
   console.log("selectedTask", selectedTask);
+
+  if (loading) return <Text>Loading ...</Text>;
   return (
     <View style={styles.container}>
       {/* <Picker data={data} onEmojiSelect={console.log} /> */}
@@ -70,6 +88,7 @@ export default function create() {
         />
 
         <Buttons.Primary
+          disabled={!!!selectedTask}
           onPress={() => {
             handleCreateTask();
           }}
@@ -84,7 +103,6 @@ export default function create() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.light.white,
-    // backgroundColor: "green",
     padding: 30,
     flex: 1,
     alignItems: "center",
