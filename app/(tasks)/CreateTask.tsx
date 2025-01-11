@@ -23,8 +23,7 @@ const CreateTask = (): React.ReactElement => {
 
   const { saveData, loading, saveCustomTask } = useCreateTask(true);
 
-  console.log("icon data", icon);
-  console.log("title", title, task?.name);
+  const { date } = useLocalSearchParams();
 
   const onSelectColor = ({ hex }: { hex: string }) => {
     // do something with the selected color.
@@ -46,7 +45,7 @@ const CreateTask = (): React.ReactElement => {
   };
   const saveTaskHandler = async () => {
     const newTask = {
-      date: new Date(),
+      date: new Date(date.toString()),
       name: task?.name == "" ? title : task?.name ?? "",
       isDone: false,
       starting_date: new Date(),
@@ -77,7 +76,7 @@ const CreateTask = (): React.ReactElement => {
     }
 
     Alert.alert("Task created successefully");
-    router.replace("/(tabs)");
+    router.push({ pathname: "/(tabs)", params: { date: date } });
   };
 
   const handleSaveTask = async () => {

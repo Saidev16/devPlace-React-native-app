@@ -14,7 +14,7 @@ import CheckBox from "expo-checkbox";
 import { Session } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
 import { Task } from "@/types/types";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { TaskCard } from "../components/Cards";
 import { languageContext } from "@/contexts/LanguageContext";
 
@@ -131,9 +131,12 @@ const Day = ({
 };
 
 const HomeScreen = () => {
+  const { date } = useLocalSearchParams();
+
+  const initialDate = date ? new Date(date.toString()) : new Date();
+
   const [count, setCount] = useState(0);
-  const [selectedDay, setSelectedDay] = useState(new Date());
-  const [toggleCheckBox, setToggleCheckBox] = useState(false);
+  const [selectedDay, setSelectedDay] = useState<Date>(initialDate);
   const [selected, setSelectedTask] = useState<number>(0);
   const [data, setData] = useState(DATA);
   const [session, setSession] = useState<Session | null>(null);
@@ -164,7 +167,9 @@ const HomeScreen = () => {
         daysButtons?.length &&
         daysButtons?.length > 0
       ) {
-        const middleIndex = Math.floor(daysButtons.length / 2);
+        const middleIndex = daysButtons.findIndex((day) => {
+          return new Date(day).toDateString() == selectedDay.toDateString();
+        });
 
         scrollViewRef.current.scrollTo({
           x: middleIndex * 60,
@@ -172,10 +177,6 @@ const HomeScreen = () => {
         });
       }
     }, 0);
-  };
-
-  const handleAddPress = () => {
-    Alert.alert("add pressed");
   };
 
   const onDayChange = (date: Date) => {
@@ -186,6 +187,14 @@ const HomeScreen = () => {
 
     //TODO : fetch data for the selected day and update the tasks board with the new data
   };
+  useEffect(() => {
+    if (date) {
+      const newDate = new Date(date.toString());
+      setSelectedDay(newDate);
+
+      fetchTasks(newDate);
+    }
+  }, [date]);
 
   const fetchTasks = async (date: Date) => {
     const { data, error } = await supabase
@@ -270,7 +279,7 @@ const HomeScreen = () => {
           router.push({
             pathname: "/(tasks)",
             params: {
-              date: selectedDay.toISOString(),
+              date: selectedDay.toString(),
             },
           })
         }
@@ -283,15 +292,20 @@ const HomeScreen = () => {
         style={styles.daysContainer}
       >
         {days &&
-          days.map((day: Date, index: number) => (
-            <Day
-              key={index}
-              date={day.toISOString()}
-              active={day.toDateString() == selectedDay.toDateString()}
-              onPress={() => onDayChange(day)}
-              {...day}
-            />
-          ))}
+          days.map((day: Date, index: number) => {
+            return (
+              <Day
+                key={index}
+                date={day.toISOString()}
+                active={
+                  day.toISOString().split("T")[0] ==
+                  selectedDay.toISOString().split("T")[0]
+                }
+                onPress={() => onDayChange(day)}
+                {...day}
+              />
+            );
+          })}
       </ScrollView>
 
       <View

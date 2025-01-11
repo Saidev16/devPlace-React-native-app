@@ -1,4 +1,4 @@
-import { Link, router, useLocalSearchParams, useNavigation } from "expo-router";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { Text } from "../components";
 import { useEffect, useState } from "react";
 import { TaskCard } from "../components/Cards";
@@ -20,9 +20,8 @@ export default function create() {
   const [selectedTask, setSelectedTask] = useState<Task>();
   const { saveData, loading } = useCreateTask(true);
   const { date } = useLocalSearchParams();
-  console.log("selectedDate ", date);
+
   const handleCreateTask = async () => {
-    console.log("create task 1");
     if (!selectedTask) return;
 
     //Exclude the id from selectedTask
@@ -37,13 +36,18 @@ export default function create() {
       created_at: new Date(),
     };
     const error = await saveData(formattedTask);
-    console.log("log error", error);
+
     if (error) {
       Alert.alert(error);
       return;
     }
 
-    router.navigate("/(tabs)");
+    router.push({
+      pathname: "/(tabs)",
+      params: {
+        date: new Date(date.toString()).toISOString(),
+      },
+    });
   };
 
   useEffect(() => {
@@ -56,13 +60,9 @@ export default function create() {
     Alert.alert(error);
   }
 
-  console.log("selectedTask", selectedTask);
-
   if (loading) return <Text>Loading ...</Text>;
   return (
     <View style={styles.container}>
-      {/* <Picker data={data} onEmojiSelect={console.log} /> */}
-
       <ScrollView style={styles.cardsContainer}>
         {customTasks.map((t) => {
           return (
@@ -82,7 +82,14 @@ export default function create() {
       </ScrollView>
       <View style={{ width: "100%", gap: 10 }}>
         <Buttons.Secondary
-          onPress={() => router.replace("(tasks)/CreateTask")}
+          onPress={() => {
+            router.push({
+              pathname: "/(tasks)/CreateTask",
+              params: {
+                date: date.toString(),
+              },
+            });
+          }}
           label="Create custom task"
           width={"auto"}
         />
