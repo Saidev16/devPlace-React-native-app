@@ -48,7 +48,7 @@ const CreateTask = (): React.ReactElement => {
       date: new Date(date.toString()),
       name: task?.name == "" ? title : task?.name ?? "",
       isDone: false,
-      starting_date: new Date(),
+      starting_date: new Date(date.toString()),
       icon: icon ?? newIcon,
       color: taskColor,
     };
