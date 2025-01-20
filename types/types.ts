@@ -56,3 +56,15 @@ export type CustomTask = {
   color?: string;
   icon?: string;
 };
+
+export type DateRange = {
+  startDate: Date;
+  endDate: Date;
+  labels: string[];
+};
+export type selectedPeriodType = "weekly" | "monthly" | "yearly";
+
+export type chartDataPoint = {
+  value: number;
+  date: Date;
+};
