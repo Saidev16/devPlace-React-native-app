@@ -6,12 +6,15 @@ import {
 } from "@/types/types";
 import { getDateRange, transformData } from "@/utils";
 import { transform } from "@babel/core";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export const useFetchAnalytics = (
   period: selectedPeriodType
 ): { data: chartDataResult[]; loading: boolean; errorMsg: string } => {
-  const [data, setData] = useState<chartDataResult[]>([]);
+  const [data, setData] = useState<{
+    data: chartDataResult[];
+    maxValue: number;
+  }>({ data: [], maxValue: 0 });
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -31,8 +34,12 @@ export const useFetchAnalytics = (
           setErrorMsg(error.message ?? "An error occured while fetching data");
         }
 
-        const transformedData = transformData(tasks, period, labels);
-        setData(transformedData);
+        const { data: transformedData, maxValue: maxValue } = transformData(
+          tasks,
+          period,
+          labels
+        );
+        setData({ data: transformedData, maxValue: maxValue });
       } catch (error) {
         throw new Error("error fetching data");
       } finally {

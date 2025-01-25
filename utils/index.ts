@@ -74,17 +74,20 @@ export const transformData = (
   tasks: chartDataPoint[],
   period: selectedPeriodType,
   labels: string[]
-): chartDataResult[] => {
+): { data: chartDataResult[]; maxValue: number } => {
   const transfomedData: chartDataResult[] = labels.map((label) => {
     return {
       value: 0,
       label: label,
+      totalTasks: 0,
     };
   });
 
   console.log("labels log", labels);
   console.log("transfomedData1", transfomedData);
   console.log("tasks", tasks);
+
+  let maxValue = 1;
 
   tasks.forEach((dataPoint) => {
     const completedDate = new Date(dataPoint.date);
@@ -111,11 +114,18 @@ export const transformData = (
       default:
         throw new Error("Invalid period type");
     }
-    if (index >= 0 && index < transfomedData.length && dataPoint.isDone) {
-      transfomedData[index].value++;
+
+    if (index >= 0 && index < transfomedData.length) {
+      transfomedData[index].totalTasks++;
+      maxValue = Math.max(maxValue, transfomedData[index].totalTasks);
+
+      // Only increment value for completed tasks
+      if (dataPoint.isDone) {
+        transfomedData[index].value++;
+      }
     }
   });
 
-  return transfomedData;
+  return { data: transfomedData, maxValue: maxValue };
 };
 export { FormValidator };

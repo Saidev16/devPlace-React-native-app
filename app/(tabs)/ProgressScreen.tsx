@@ -14,16 +14,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { selectedPeriodType } from "@/types/types";
 import { useFetchAnalytics } from "@/hooks/useFetchAnalytics";
 
-const data = [
-  { value: 50 },
-  { value: 80 },
-  { value: 90 },
-  { value: 70 },
-  { value: 70 },
-  { value: 70 },
-  { value: 40 },
-];
-
 export const ChartStatus = ({
   pourcentage,
 }: {
@@ -48,7 +38,6 @@ const ProgressScreen = (): React.ReactElement => {
     loading,
     errorMsg,
   } = useFetchAnalytics(selectedPeriod);
-  const xAxisLabels = ["S", "M", "T", "W", "T", "F", "S"];
 
   if (loading) {
     return (
@@ -81,7 +70,7 @@ const ProgressScreen = (): React.ReactElement => {
       >
         <ChartStatus pourcentage={20} />
         <BarChart
-          maxValue={100}
+          maxValue={chartData.maxValue}
           adjustToWidth={true}
           // width={Dimensions.get("screen").width * 0.8}
           parentWidth={Dimensions.get("screen").width * 0.8}
@@ -89,7 +78,7 @@ const ProgressScreen = (): React.ReactElement => {
           xAxisLength={0.1}
           yAxisThickness={0.1}
           showXAxisIndices={false}
-          data={chartData}
+          data={chartData.data}
           rulesType={"solid"}
           rulesColor={Colors.light.lightGrey}
           backgroundColor={Colors.light.lightGrey}
@@ -104,7 +93,7 @@ const ProgressScreen = (): React.ReactElement => {
           isAnimated={true}
           animationDuration={200}
           noOfSections={5}
-          xAxisLabelTexts={chartData.map((data) => data.label)}
+          xAxisLabelTexts={chartData.data.map((data) => data.label)}
           xAxisColor={"red"}
           xAxisLabelTextStyle={{ color: Colors.light.gray }}
           yAxisIndicesColor={"red"}

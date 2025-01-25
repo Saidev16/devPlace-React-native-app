@@ -71,4 +71,5 @@ export type chartDataPoint = {
 export type chartDataResult = {
   value: number;
   label: string;
+  totalTasks: number;
 };
