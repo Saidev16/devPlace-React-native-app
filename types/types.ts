@@ -68,3 +68,7 @@ export type chartDataPoint = {
   value: number;
   date: Date;
 };
+export type chartDataResult = {
+  value: number;
+  label: string;
+};

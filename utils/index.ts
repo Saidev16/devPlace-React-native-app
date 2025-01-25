@@ -1,4 +1,9 @@
-import { chartDataPoint, DateRange, selectedPeriodType } from "@/types/types";
+import {
+  chartDataPoint,
+  chartDataResult,
+  DateRange,
+  selectedPeriodType,
+} from "@/types/types";
 import * as FormValidator from "./form-validator";
 
 export const addOneToDate = (date: Date) => {
@@ -11,8 +16,8 @@ export const getDateRange = (period: selectedPeriodType): DateRange => {
   const now = new Date();
   let startDate = new Date();
   let endDate = new Date();
-  let labels: string[] = [];
 
+  let labels: string[] = [];
   switch (period) {
     case "weekly":
       startDate = new Date();
@@ -36,7 +41,7 @@ export const getDateRange = (period: selectedPeriodType): DateRange => {
       startDate = new Date(now);
       startDate.setMonth(now.getMonth() - 11);
       startDate.setDate(1);
-      let labels = [];
+      labels = [];
       const months = [
         "Dec",
         "Nov",
@@ -69,13 +74,17 @@ export const transformData = (
   tasks: chartDataPoint[],
   period: selectedPeriodType,
   labels: string[]
-) => {
-  let transfomedData = labels.map((label) => {
+): chartDataResult[] => {
+  const transfomedData: chartDataResult[] = labels.map((label) => {
     return {
       value: 0,
       label: label,
     };
   });
+
+  console.log("labels log", labels);
+  console.log("transfomedData1", transfomedData);
+  console.log("tasks", tasks);
 
   tasks.forEach((dataPoint) => {
     const completedDate = new Date(dataPoint.date);
@@ -83,7 +92,9 @@ export const transformData = (
 
     switch (period) {
       case "weekly":
+        console.log("completed date", completedDate);
         index = completedDate.getDay();
+        console.log("index of completed date", completedDate);
         break;
 
       case "monthly":
@@ -100,9 +111,11 @@ export const transformData = (
       default:
         throw new Error("Invalid period type");
     }
-    if (index >= 0 && index < transfomedData.length && tasks.isCompleted) {
+    if (index >= 0 && index < transfomedData.length && dataPoint.isDone) {
       transfomedData[index].value++;
     }
   });
+
+  return transfomedData;
 };
 export { FormValidator };

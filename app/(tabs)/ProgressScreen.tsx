@@ -1,5 +1,5 @@
 import { View, Text, Dimensions } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   BarChart,
   LineChart,
@@ -12,6 +12,7 @@ import { color } from "react-native-elements/dist/helpers";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { selectedPeriodType } from "@/types/types";
+import { useFetchAnalytics } from "@/hooks/useFetchAnalytics";
 
 const data = [
   { value: 50 },
@@ -40,16 +41,22 @@ const ProgressScreen = (): React.ReactElement => {
   const [selectedPeriod, setSelectedPeriod] =
     useState<selectedPeriodType>("weekly");
 
-  const [chartData, setChartData] = useState();
+  // const [chartData, setChartData] = useState();
 
+  const {
+    data: chartData,
+    loading,
+    errorMsg,
+  } = useFetchAnalytics(selectedPeriod);
   const xAxisLabels = ["S", "M", "T", "W", "T", "F", "S"];
 
-  const fetchChartData = async () => {
-    const dateRangeToFetch = getDateRange(selectedPeriod);
-    const data = await fetchData(dateToFetch);
-    const transormedData = transformData(data);
-    setChartData(transormedData);
-  };
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
 
   return (
     <View
@@ -74,6 +81,7 @@ const ProgressScreen = (): React.ReactElement => {
       >
         <ChartStatus pourcentage={20} />
         <BarChart
+          maxValue={100}
           adjustToWidth={true}
           // width={Dimensions.get("screen").width * 0.8}
           parentWidth={Dimensions.get("screen").width * 0.8}
@@ -81,7 +89,7 @@ const ProgressScreen = (): React.ReactElement => {
           xAxisLength={0.1}
           yAxisThickness={0.1}
           showXAxisIndices={false}
-          data={data}
+          data={chartData}
           rulesType={"solid"}
           rulesColor={Colors.light.lightGrey}
           backgroundColor={Colors.light.lightGrey}
@@ -96,7 +104,7 @@ const ProgressScreen = (): React.ReactElement => {
           isAnimated={true}
           animationDuration={200}
           noOfSections={5}
-          xAxisLabelTexts={xAxisLabels}
+          xAxisLabelTexts={chartData.map((data) => data.label)}
           xAxisColor={"red"}
           xAxisLabelTextStyle={{ color: Colors.light.gray }}
           yAxisIndicesColor={"red"}
